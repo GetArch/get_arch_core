@@ -1,5 +1,7 @@
 library get_arch_core;
 
+import 'package:get_it/get_it.dart' as get_it;
+
 export 'package:get_it/get_it.dart';
 export 'package:equatable/equatable.dart';
 export 'package:dartz/dartz.dart'
@@ -8,11 +10,11 @@ export 'package:rxdart/rxdart.dart';
 export 'package:meta/meta.dart';
 export 'package:injectable/injectable.dart'
     show
-    EnvironmentFilter,
-    NoEnvOrContains,
-    kEnvironmentsName,
-    GetItHelper,
-    InjectableInit;
+        EnvironmentFilter,
+        NoEnvOrContains,
+        kEnvironmentsName,
+        GetItHelper,
+        InjectableInit;
 
 export 'src/domain/value_object.dart';
 export 'src/domain/entity.dart';
@@ -31,3 +33,6 @@ export 'src/interface/do.dart';
 export 'src/config/env_config.dart';
 export 'src/config/get_arch_package.dart';
 export 'src/config/get_arch_application.dart';
+
+// service locator
+final sl = get_it.GetIt.I;
