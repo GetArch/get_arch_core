@@ -51,13 +51,13 @@ class GetArchApplication {
   }) async {
     try {
       print(logo(masterEnv));
-      final filter = NoEnvOrContains(masterEnv.envSign.inString);
+      final filter = NoEnvOrContains(masterEnv.envSign.name);
 
       // 预先注册环境标志, 防止多GetItHelper冲突
       // 多GH冲突的原因可能就是 注册的是 <Set<String?> 可实际检测的却是<Set<String>>导致的
       // 单GH无法发现, 目前只能用预先注册的方式通过通过检测
       GetIt.I.registerSingleton<Set<String>>(
-        filter.environments.map<String>((e) => '$e').toSet(),
+        filter.environments.map<String>((e) => e.toString()).toSet(),
         instanceName: kEnvironmentsName,
       );
       GetIt.I.registerSingleton<Set<String?>>(
@@ -89,8 +89,7 @@ class GetArchCorePackage extends IGetArchPackage {
   @override
   Future<void>? initPackageDI(EnvConfig config,
           {EnvironmentFilter? filter}) async =>
-      GetItHelper(
-              GetIt.I, filter != null ? null : config.envSign.inString, filter)
+      GetItHelper(GetIt.I, filter != null ? null : config.envSign.name, filter)
           .singleton<EnvConfig>(config);
 
   @override

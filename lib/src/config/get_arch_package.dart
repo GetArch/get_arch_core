@@ -12,7 +12,7 @@ import 'package:injectable/injectable.dart';
 abstract class IGetArchPackage {
   final EnvConfig? pkgEnv;
 
-  IGetArchPackage(this.pkgEnv);
+  IGetArchPackage([this.pkgEnv]);
 
   ///
   /// [masterEnv] 主环境, 必填

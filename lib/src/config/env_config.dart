@@ -35,10 +35,12 @@ class EnvConfig extends ValueObject {
   ///
   /// 本构造适用于单独配置某一个仅使用EnvSign的GetArchPackage,
   /// 当然, 如果你的整个项目中都没有用到其他属性,也可以在globalConfig中使用本构造
-  const EnvConfig.sign(this.envSign)
-      : appName = 'null app name',
-        libVersion = '0.0.0',
-        packTime = null;
+  const EnvConfig.sign(
+    this.envSign, {
+    this.appName = 'Not yet configured appName',
+    this.libVersion = '0.0.0',
+    this.packTime,
+  });
 
   @override
   List<Object?> get props => [appName, libVersion, packTime, envSign];
@@ -58,8 +60,4 @@ extension EnvSignValueX on Iterable<EnvSign> {
   };
 
   fromString(String sign) => _map[sign];
-}
-
-extension EnvSignX on EnvSign {
-  String get inString => name;
 }
