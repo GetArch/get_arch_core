@@ -22,14 +22,13 @@ import 'package:get_arch_core/src/constants/pubspec.yaml.g.dart';
 /// [mockDI] 该函数提供了一个 GetIt实例参数, 用于在单元测试中注册用于调试的依赖
 
 // 打印GetArgLogo和版本
-String getArchLogo(EnvConfig env) =>
-    r'''
+String getArchLogo(EnvConfig env) => r'''
   _____      _                       _     
  / ____|    | |       /\            | |    
 | |  __  ___| |_     /  \   _ __ ___| |__  
 | | |_ |/ _ \ __|   / /\ \ | '__/ __| '_ \ 
 | |__| |  __/ |_   / ____ \| | | (__| | | |
- \_____|\___|\__| /_/    \_\_|  \___|_| |_|  ''' +
+ \_____|\___|\__| /_/    \_\_|  \___|_| |_|  '''
     'v$version';
 
 typedef DependencyInjection = Future<GetIt> Function(
@@ -44,12 +43,11 @@ class GetArchApplication {
 
   static Future run(
     EnvConfig masterEnv, {
-    bool printConfig: true,
+    bool printConfig = true,
     required List<IGetArchPackage>? packages,
     DependencyInjection? manualInject,
     String Function(EnvConfig env) logo = getArchLogo,
     void Function(Object e, StackTrace s)? onInitError,
-    @Deprecated('use manualInject') Future<void> Function(GetIt g)? mockDI,
   }) async {
     try {
       print(logo(masterEnv));
@@ -67,9 +65,6 @@ class GetArchApplication {
         instanceName: kEnvironmentsName,
       );
       await GetArchCorePackage().init(masterEnv, printConfig, filter);
-      // deprecated
-      await mockDI?.call(GetIt.I);
-
       await manualInject?.call(GetIt.I, environmentFilter: filter);
       if (packages != null) {
         for (final pkg in packages) {

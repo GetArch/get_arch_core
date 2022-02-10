@@ -1,7 +1,7 @@
 name: get_arch_core
 description: dart architecture package, Inspired by Explicit Architecture, Clean Architectures, DDD,
 version: 3.0.0
-homepage: https://github.com/Hu-Wentao/get_arch_core
+homepage: https://github.com/GetArch/get_arch_core
 
 environment:
   sdk: '>=2.16.0-134.5.beta <3.0.0'
