@@ -77,7 +77,7 @@ abstract class BaseGetArchPackage extends IGetArchPackage {
     EnvironmentFilter? environmentFilter,
   ) async {
     final EnvConfig env = pkgEnv ?? masterEnv;
-    if (printConfig) _printConf(env);
+
     try {
       await beforeInitDI(env);
       await initPackageDI?.call(config: env, filter: environmentFilter);
@@ -86,6 +86,8 @@ abstract class BaseGetArchPackage extends IGetArchPackage {
       await onInitError(e, s);
     } finally {
       await onFinally(env);
+      // 打印配置信息
+      if (printConfig) _printConf(env);
     }
   }
 
@@ -157,4 +159,26 @@ abstract class BaseGetArchPackage extends IGetArchPackage {
   /// DI结束(无论是否出错都会被执行)
   @override
   Future<void> onFinally(EnvConfig config) => Future.value();
+}
+
+///
+/// 指定配置文件类型的 BaseGetArchPackage
+/// 将会自动打印配置信息
+abstract class BaseConfigurableGetArchPackage<C extends IDto>
+    extends BaseGetArchPackage {
+  @override
+  Map<String, String>? specificConfigInfoWithEnvConfig(EnvConfig config) {
+    final key = "ConfigStatus";
+    if (sl.isRegistered<C>()) {
+      final configJs = sl<C>().toJson();
+      final r = configJs.map<String, String>(
+          (key, value) => MapEntry('  $key', value.toString()));
+      return {key: "config [$C] register success"}..addAll(r);
+    } else {
+      return {
+        key:
+            "config [$C] register failure. Try move your Main Package to first line in GetArchApplication.run()"
+      };
+    }
+  }
 }
