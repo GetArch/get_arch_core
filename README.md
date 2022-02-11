@@ -28,7 +28,7 @@ import './injector.config.dart';
 /// Please copy this file to your project and rename it to `injector.dart` ,
 /// and run `dart run build_runner build` to generate `./injector.config.dart`
 @InjectableInit()
-Future configureDependencies({
+Future configPackageDI({
   required EnvConfig config,
   EnvironmentFilter? filter,
 }) async =>
@@ -43,9 +43,9 @@ Future configureDependencies({
 
 ```dart
 class HelloCliPackage extends BaseGetArchPackage {
-  /// 在这里 import `injector.dart` 中的 `configureDependencies`方法
+  /// 在这里 import `injector.dart` 中的 `configPackageDI`方法
   @override
-  InitPackageDI? get initPackageDI => configureDependencies;
+  InitPackageDI? get initPackageDI => configPackageDI;
 
 /// 更多配置请参考 BaseGetArchPackage源代码, 手动实现 IGetArchPackage
 }
@@ -53,8 +53,7 @@ class HelloCliPackage extends BaseGetArchPackage {
 
 ### 3 注入依赖
 
-只需要添加 `@lazySingleton`注解, 即可单例注入实例.
-相关注入代码将会通过 `dart run build_runner build`在 `./injector.config.dart` 中生成
+只需要添加 `@lazySingleton`注解, 即可单例注入实例. 相关注入代码将会通过 `dart run build_runner build`在 `./injector.config.dart` 中生成
 
 ```dart
 @lazySingleton

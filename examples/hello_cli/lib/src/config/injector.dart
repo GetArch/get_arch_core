@@ -6,7 +6,7 @@ import './injector.config.dart';
 ///
 /// run `dart run build_runner build` to generate `./injector.config.dart`
 @InjectableInit()
-Future configureDependencies({
+Future configPackageDI({
   required EnvConfig config,
   EnvironmentFilter? filter,
 }) async =>

@@ -4,7 +4,7 @@ import 'package:hello_cli/src/config/injector.dart';
 
 class HelloCliPackage extends BaseGetArchPackage {
   @override
-  InitPackageDI? get initPackageDI => configureDependencies;
+  InitPackageDI? get initPackageDI => configPackageDI;
 }
 
 Future<void> main(List<String> arguments) async {
