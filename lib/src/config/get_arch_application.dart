@@ -18,7 +18,7 @@ import 'package:get_arch_core/src/constants/pubspec.yaml.g.dart';
 /// ```
 /// [globalConfig] 全局环境配置
 /// [printConfig] 在Flutter中建议设置该值为 !kReleaseMode
-/// [packages] 其他实现了[IGetArchPackage]的类
+/// [packages] 其他实现了[IGetArchPackage / BaseGetArchPackage]的类
 /// [mockDI] 该函数提供了一个 GetIt实例参数, 用于在单元测试中注册用于调试的依赖
 
 // 打印GetArgLogo和版本
@@ -79,7 +79,7 @@ class GetArchApplication {
   }
 }
 
-class GetArchCorePackage extends IGetArchPackage {
+class GetArchCorePackage extends BaseGetArchPackage {
   // GetArchCore只接受全局EnvConfig
   GetArchCorePackage() : super(null);
 
@@ -104,8 +104,6 @@ class GetArchCorePackage extends IGetArchPackage {
         'Runtime   Env': '${config?.envSign}',
       };
 
-  @override
-  Map<Type, bool>? get interfaceImplRegisterStatus => null;
 }
 
 // 可以通过如下代码来自动生成注册代码
