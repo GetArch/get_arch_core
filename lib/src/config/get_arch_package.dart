@@ -4,7 +4,11 @@
 // Time  : 23:46
 
 import 'package:get_arch_core/get_arch_core.dart';
-import 'package:injectable/injectable.dart';
+
+typedef InitPackageDI = Future Function({
+  required EnvConfig config,
+  EnvironmentFilter? filter,
+});
 
 ///
 /// All GetArch packages must implement this class
@@ -21,15 +25,18 @@ abstract class IGetArchPackage {
   ///   如果项目中只有一个 [GetArchPackage] 则可以为空
   ///   如果项目中有多个 [GetArchPackage] 则只有首个开始注入的[GetArchPackage]可以为空
   ///     否则将导致异常抛出,注入失败
-  Future<void> init(
-      EnvConfig masterEnv, bool printConfig, EnvironmentFilter? filter) async {
+  Future<void> init(EnvConfig masterEnv, bool printConfig,
+      EnvironmentFilter? environmentFilter) async {
     final EnvConfig env = pkgEnv ?? masterEnv;
     if (printConfig) _printConf(env);
     try {
-      await initPackage(env);
-      await initPackageDI(env, filter: filter);
+      await beforeInitDI(env);
+      await initPackageDI?.call(config: env, filter: environmentFilter);
+      await afterInitDI(env);
     } catch (e, s) {
-      print('[$runtimeType].init ### Error: [\n$e\n]\nStackTrace[\n$s\n]');
+      await onInitError(e, s);
+    } finally {
+      await onFinally(env);
     }
   }
 
@@ -59,11 +66,21 @@ abstract class IGetArchPackage {
   /// 打印其他类型的Package配置信息
   Map<String, String>? printOtherStateWithEnvConfig(EnvConfig config);
 
-  /// 初始化包
-  Future<void>? initPackage(EnvConfig config);
+  /// 初始化DI之前
+  Future<void> beforeInitDI(EnvConfig config) => Future.value();
 
   /// 初始化包依赖注入
   /// 如果一个项目中同时使用了多个[IGetArchPackage],则务必使用 [gh]参数
   /// 因为同一个项目, 只能有唯一的[gh], 否则会导致DI失败
-  Future<void>? initPackageDI(EnvConfig config, {EnvironmentFilter? filter});
+  InitPackageDI? get initPackageDI;
+
+  /// 初始化DI之后
+  Future<void> afterInitDI(EnvConfig config) => Future.value();
+
+  /// DI出错
+  Future<void> onInitError(Object e, StackTrace s) async =>
+      print('[$runtimeType].init ### Error: [\n$e\n]\nStackTrace[\n$s\n]');
+
+  /// DI结束(无论是否出错都会被执行)
+  Future<void> onFinally(EnvConfig config) => Future.value();
 }

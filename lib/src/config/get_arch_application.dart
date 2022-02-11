@@ -84,13 +84,15 @@ class GetArchCorePackage extends IGetArchPackage {
   GetArchCorePackage() : super(null);
 
   @override
-  Future<void>? initPackage(EnvConfig? config) => null;
-
-  @override
-  Future<void>? initPackageDI(EnvConfig config,
-          {EnvironmentFilter? filter}) async =>
-      GetItHelper(GetIt.I, filter != null ? null : config.envSign.name, filter)
-          .singleton<EnvConfig>(config);
+  InitPackageDI get initPackageDI => ({
+        required EnvConfig config,
+        EnvironmentFilter? filter,
+      }) async =>
+          GetItHelper(
+            GetIt.I,
+            filter != null ? null : config.envSign.name,
+            filter,
+          ).singleton<EnvConfig>(config);
 
   @override
   Map<String, String> printOtherStateWithEnvConfig(EnvConfig? config) => {

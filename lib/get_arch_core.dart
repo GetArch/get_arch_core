@@ -8,13 +8,7 @@ export 'package:dartz/dartz.dart'
     show Either, Unit, left, right, Left, Right, Tuple2, Tuple3;
 export 'package:rxdart/rxdart.dart';
 export 'package:meta/meta.dart';
-export 'package:injectable/injectable.dart'
-    show
-        EnvironmentFilter,
-        NoEnvOrContains,
-        kEnvironmentsName,
-        GetItHelper,
-        InjectableInit;
+export 'package:injectable/injectable.dart';
 
 export 'src/domain/value_object.dart';
 export 'src/domain/entity.dart';
