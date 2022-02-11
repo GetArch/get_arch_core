@@ -22,14 +22,16 @@ import 'package:get_arch_core/src/constants/pubspec.yaml.g.dart';
 /// [mockDI] 该函数提供了一个 GetIt实例参数, 用于在单元测试中注册用于调试的依赖
 
 // 打印GetArgLogo和版本
-String getArchLogo(EnvConfig env) => r'''
-  _____      _                       _     
- / ____|    | |       /\            | |    
-| |  __  ___| |_     /  \   _ __ ___| |__  
-| | |_ |/ _ \ __|   / /\ \ | '__/ __| '_ \ 
-| |__| |  __/ |_   / ____ \| | | (__| | | |
- \_____|\___|\__| /_/    \_\_|  \___|_| |_|  '''
-    'v$version';
+List<String> getArchLogo(EnvConfig env) => [
+      r"╔╔═════════════════════════════════════════════════════",
+      r"   _____      _                       _     ",
+      r"  / ____|    | |       /\            | |    ",
+      r" | |  __  ___| |_     /  \   _ __ ___| |__  ",
+      r" | | |_ |/ _ \ __|   / /\ \ | '__ / __ | '_\ ",
+      r" | |__| |  __/ |_   / ____ \| | | (__| | | |",
+      r"  \_____|\___|\__| /_/    \_\_|  \___|_| |_| " "   v$version",
+      r" ",
+    ];
 
 typedef DependencyInjection = Future<GetIt> Function(
   GetIt get, {
@@ -38,19 +40,23 @@ typedef DependencyInjection = Future<GetIt> Function(
 });
 
 class GetArchApplication {
-  static const _endInfo =
-      '╠╬═══ All configurations have been loaded ════════\n';
+  static const _endIns = [
+    '╠╬══ All configurations have been loaded ══════════════',
+    '╚╚═════════════════════════════════════════════════════',
+  ];
 
   static Future run(
     EnvConfig masterEnv, {
     bool printConfig = true,
     required List<IGetArchPackage>? packages,
     DependencyInjection? manualInject,
-    String Function(EnvConfig env) logo = getArchLogo,
+    List<String> Function(EnvConfig env) logo = getArchLogo,
     void Function(Object e, StackTrace s)? onInitError,
   }) async {
     try {
-      print(logo(masterEnv));
+      for (final ln in logo(masterEnv)) {
+        print(ln);
+      }
       final filter = NoEnvOrContains(masterEnv.envSign.name);
 
       // 预先注册环境标志, 防止多GetItHelper冲突
@@ -71,7 +77,9 @@ class GetArchApplication {
           await pkg.init(masterEnv, printConfig, filter);
         }
       }
-      print(_endInfo);
+      for (final ln in _endIns) {
+        print(ln);
+      }
     } catch (e, s) {
       onInitError?.call(e, s);
       print('GetArchApplication.run #### Init Error: [$e]\nStackTrace[\n$s\n]');
@@ -103,7 +111,6 @@ class GetArchCorePackage extends BaseGetArchPackage {
         'Build    Time': '${config?.packTime}',
         'Runtime   Env': '${config?.envSign}',
       };
-
 }
 
 // 可以通过如下代码来自动生成注册代码

@@ -88,21 +88,29 @@ abstract class BaseGetArchPackage extends IGetArchPackage {
 
   // 起止行4个空格,信息内容行6个空格
   void _printConf(EnvConfig config) {
-    final start =
-        '\n╠╬══╝ Package Config Start ╚══════════════════════\n╠╣    [[$runtimeType]]';
-    final endLn = '╚╚═══ Package Config Loaded   ════════════════════\n';
-    StringBuffer? bf = interfaceImplRegisterStatus?.entries.fold<StringBuffer>(
-        StringBuffer(),
-        (pre, kv) => pre
-          ..writeln(
-              '  <${kv.key}>Implement: ${kv.value == null ? "ERROR! Please check package's EnvConfig !" : kv.value! ? 'ON' : 'OFF'}'));
-    bf = printOtherStateWithEnvConfig(config)?.entries.fold<StringBuffer?>(
-            bf ?? StringBuffer(),
-            (pre, kv) => pre?..writeln('  ${kv.key} : ${kv.value}')) ??
-        bf;
+    final startLns = [
+      '╠╬═════════════════════════════════════════════════════',
+      '╠╣  [[$runtimeType]]',
+      '╠╣  ',
+    ];
+    const endLn = [
+      '╚╚══ Package Config Loaded ════════════════════════════',
+    ];
 
-    print(start);
-    print(bf ?? endLn);
+    final mainInfoLns = interfaceImplRegisterStatus?.entries
+            .map((kv) =>
+                '  <${kv.key}>Implement: ${kv.value == null ? "ERROR! Please check package's EnvConfig !" : kv.value! ? 'ON' : 'OFF'}')
+            .toList() ??
+        [];
+
+    final otherInfoLns = printOtherStateWithEnvConfig(config)
+            ?.entries
+            .map((kv) => '  ${kv.key} : ${kv.value}')
+            .toList() ??
+        [];
+    for (final ln in startLns + mainInfoLns + otherInfoLns + endLn) {
+      print(ln);
+    }
   }
 
   // 打印Package内接口实现的开关状态
