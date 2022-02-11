@@ -13,6 +13,9 @@ typedef InitPackageDI = Future Function({
 abstract class IGetArchPackage {
   final EnvConfig? pkgEnv;
 
+  /// 是否隐藏包配置信息, 以防止敏感信息谢林; null 表示自动配置,详见[BaseGetArchPackage]
+  bool? hideSpecificConfigInfo;
+
   // 可空, 除了在构造时传入 pkgEnv, 还可以在 init() 中传入 masterEnv为DI配置
   IGetArchPackage(this.pkgEnv);
 
@@ -87,16 +90,21 @@ abstract class BaseGetArchPackage extends IGetArchPackage {
   }
 
   // 起止行4个空格,信息内容行6个空格
-  void _printConf(EnvConfig config) {
+  void _printConf(EnvConfig config, {bool? hideSpecificConfigInfo}) {
+    // 如果类在创建时指定了不为空,则不再接受外部参数
+    this.hideSpecificConfigInfo ??=
+        hideSpecificConfigInfo ?? config.envSign == EnvSign.prod;
     final startLns = [
       '╠╬═════════════════════════════════════════════════════',
       '╠╣  [[$runtimeType]]',
       '╠╣  ',
     ];
+    final maskEndLn = [
+      '╚╚══ Package Config info hidden ═══════════════════════',
+    ];
     const endLn = [
       '╚╚══ Package Config Loaded ════════════════════════════',
     ];
-
     final mainInfoLns = interfaceImplRegisterStatus?.entries
             .map((kv) =>
                 '  <${kv.key}>Implement: ${kv.value == null ? "ERROR! Please check package's EnvConfig !" : kv.value! ? 'ON' : 'OFF'}')
@@ -108,7 +116,11 @@ abstract class BaseGetArchPackage extends IGetArchPackage {
             .map((kv) => '  ${kv.key} : ${kv.value}')
             .toList() ??
         [];
-    for (final ln in startLns + mainInfoLns + otherInfoLns + endLn) {
+
+    final specificConfigInfo = this.hideSpecificConfigInfo!
+        ? maskEndLn
+        : mainInfoLns + otherInfoLns + endLn;
+    for (final ln in startLns + specificConfigInfo) {
       print(ln);
     }
   }

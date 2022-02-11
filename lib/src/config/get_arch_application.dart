@@ -86,35 +86,3 @@ class GetArchApplication {
     }
   }
 }
-
-class GetArchCorePackage extends BaseGetArchPackage {
-  // GetArchCore只接受全局EnvConfig
-  GetArchCorePackage() : super(null);
-
-  @override
-  InitPackageDI get initPackageDI => ({
-        required EnvConfig config,
-        EnvironmentFilter? filter,
-      }) async =>
-          GetItHelper(
-            GetIt.I,
-            filter != null ? null : config.envSign.name,
-            filter,
-          ).singleton<EnvConfig>(config);
-
-  @override
-  Map<String, String> printOtherStateWithEnvConfig(EnvConfig? config) => {
-        'Frame Version':
-            '$version at ${DateTime.fromMillisecondsSinceEpoch(timestamp * 1000).toString().split(' ').first}',
-        'App      Name': '${config?.appName}',
-        'Lib   Version': '${config?.libVersion}',
-        'Build    Time': '${config?.packTime}',
-        'Runtime   Env': '${config?.envSign}',
-      };
-}
-
-// 可以通过如下代码来自动生成注册代码
-// 这里不再使用自动注册, 是因为在其他项目导包时经常会误导入本文件中的$initGetIt
-//@injectableInit
-//Future<void> initDI(EnvConfig config) async =>
-//    $initGetIt(GetIt.instance, environment: config.envSign.toString());
