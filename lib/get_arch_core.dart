@@ -28,5 +28,7 @@ export 'src/config/env_config.dart';
 export 'src/config/get_arch_package.dart';
 export 'src/config/get_arch_application.dart';
 
+export 'src/get_arch_core_package.dart';
+
 // service locator
 final sl = get_it.GetIt.I;
