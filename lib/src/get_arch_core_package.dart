@@ -21,7 +21,7 @@ class GetArchCorePackage extends BaseGetArchPackage {
       ).singleton<EnvConfig>(config);
 
   @override
-  Map<String, String> printOtherStateWithEnvConfig(EnvConfig? config) => {
+  Map<String, String> specificConfigInfoWithEnvConfig(EnvConfig? config) => {
     'Frame Version':
     '$version at ${DateTime.fromMillisecondsSinceEpoch(timestamp * 1000).toString().split(' ').first}',
     'App      Name': '${config?.appName}',

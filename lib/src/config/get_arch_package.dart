@@ -11,12 +11,12 @@ typedef InitPackageDI = Future Function({
 });
 
 abstract class IGetArchPackage {
+  /// 可空, 除了在构造时传入 pkgEnv, 还可以在 init() 中传入 masterEnv
   final EnvConfig? pkgEnv;
 
   /// 是否隐藏包配置信息, 以防止敏感信息谢林; null 表示自动配置,详见[BaseGetArchPackage]
   bool? hideSpecificConfigInfo;
 
-  // 可空, 除了在构造时传入 pkgEnv, 还可以在 init() 中传入 masterEnv为DI配置
   IGetArchPackage(this.pkgEnv);
 
   ///
@@ -37,7 +37,7 @@ abstract class IGetArchPackage {
   Map<Type, bool?>? get interfaceImplRegisterStatus;
 
   /// 打印其他类型的Package配置信息
-  Map<String, String>? printOtherStateWithEnvConfig(EnvConfig config);
+  Map<String, String>? specificConfigInfoWithEnvConfig(EnvConfig config);
 
   /// 初始化DI之前
   Future<void> beforeInitDI(EnvConfig config);
@@ -111,7 +111,7 @@ abstract class BaseGetArchPackage extends IGetArchPackage {
             .toList() ??
         [];
 
-    final otherInfoLns = printOtherStateWithEnvConfig(config)
+    final specificConfigInfoLns = specificConfigInfoWithEnvConfig(config)
             ?.entries
             .map((kv) => '  ${kv.key} : ${kv.value}')
             .toList() ??
@@ -119,8 +119,8 @@ abstract class BaseGetArchPackage extends IGetArchPackage {
 
     final specificConfigInfo = this.hideSpecificConfigInfo!
         ? maskEndLn
-        : mainInfoLns + otherInfoLns + endLn;
-    for (final ln in startLns + specificConfigInfo) {
+        : specificConfigInfoLns + endLn;
+    for (final ln in startLns + mainInfoLns + specificConfigInfo) {
       print(ln);
     }
   }
@@ -132,7 +132,8 @@ abstract class BaseGetArchPackage extends IGetArchPackage {
 
   /// 打印其他类型的Package配置信息
   @override
-  Map<String, String>? printOtherStateWithEnvConfig(EnvConfig config) => null;
+  Map<String, String>? specificConfigInfoWithEnvConfig(EnvConfig config) =>
+      null;
 
   /// 初始化DI之前
   @override
