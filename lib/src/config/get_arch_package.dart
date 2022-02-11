@@ -168,16 +168,17 @@ abstract class BaseConfigurableGetArchPackage<C extends IDto>
     extends BaseGetArchPackage {
   @override
   Map<String, String>? specificConfigInfoWithEnvConfig(EnvConfig config) {
-    final key = "ConfigStatus";
+    final key = "ConfigClass";
     if (sl.isRegistered<C>()) {
       final configJs = sl<C>().toJson();
       final r = configJs.map<String, String>(
           (key, value) => MapEntry('  $key', value.toString()));
-      return {key: "config [$C] register success"}..addAll(r);
+      return {key: "[$C] register success"}..addAll(r);
     } else {
       return {
-        key:
-            "config [$C] register failure. Try move your Main Package to first line in GetArchApplication.run()"
+        key: "[$C] register failure. "
+            "Try move your Main Package to first line in GetArchApplication.run(),"
+            "Or check config class[$C] is register correct"
       };
     }
   }
