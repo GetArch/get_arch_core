@@ -1,20 +1,24 @@
 import 'package:get_arch_core/get_arch_core.dart';
 
 @lazySingleton
-class ServiceFoo {
+class DeepThought {
   printSome(Object some) {
-    print("ServiceFoo: $some");
+    print("DeepThought: $some");
     return some;
   }
 }
 
 @lazySingleton
-class ServiceBar {
-  final ServiceFoo foo;
+class ServiceFoo {
+  final DeepThought foo;
 
-  ServiceBar(this.foo);
+  ServiceFoo(this.foo);
 
-  calculate(int a, int b) {
-    return foo.printSome(a + b);
+  input(List<String> some) {
+    return foo.printSome(some.first.split(" ").join().length);
+  }
+
+  multiplication(int a, int b) {
+    return foo.printSome(a * b);
   }
 }

@@ -15,7 +15,8 @@ import '../application/service.dart'
 _i1.GetIt $initGetIt(_i1.GetIt get,
     {String? environment, _i2.EnvironmentFilter? environmentFilter}) {
   final gh = _i2.GetItHelper(get, environment, environmentFilter);
-  gh.lazySingleton<_i3.ServiceFoo>(() => _i3.ServiceFoo());
-  gh.lazySingleton<_i3.ServiceBar>(() => _i3.ServiceBar(get<_i3.ServiceFoo>()));
+  gh.lazySingleton<_i3.DeepThought>(() => _i3.DeepThought());
+  gh.lazySingleton<_i3.ServiceFoo>(
+      () => _i3.ServiceFoo(get<_i3.DeepThought>()));
   return get;
 }

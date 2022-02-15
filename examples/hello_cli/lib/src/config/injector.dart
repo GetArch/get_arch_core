@@ -6,12 +6,5 @@ import './injector.config.dart';
 ///
 /// run `dart run build_runner build` to generate `./injector.config.dart`
 @InjectableInit()
-Future configPackageDI({
-  required EnvConfig config,
-  EnvironmentFilter? filter,
-}) async =>
-    await $initGetIt(
-      sl,
-      environment: filter == null ? config.envSign.name : null,
-      environmentFilter: filter,
-    );
+Future initPackageDI(GetIt getIt, IConfig config) async =>
+    await $initGetIt(getIt, environmentFilter: config.filter);

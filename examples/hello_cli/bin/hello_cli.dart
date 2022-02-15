@@ -4,14 +4,22 @@ import 'package:hello_cli/src/application/service.dart';
 
 void main(List<String> arguments) {
   GetArchApplication.run(
-    EnvConfig.sign(EnvSign.dev, appName: 'Hello CLI'),
+    GetArchCoreConfig.sign(EnvSign.test),
     packages: [
       HelloCliPackage(),
     ],
-  );
-
-  sl<ServiceBar>().calculate(
-    int.parse(arguments[0]),
-    int.parse(arguments[1]),
+    onBeforeAppRun: () async {
+      // set example
+      if (arguments.isEmpty) {
+        arguments = ["the Answer to Life, the Universe and Everything is"];
+      }
+      print(arguments);
+    },
+    // if you not use `await` on `run` method,
+    // please put your logic code in `onApplicationRun`
+    onApplicationRun: (g, c) async {
+      final bar = g<ServiceFoo>();
+      bar.input(arguments);
+    },
   );
 }
