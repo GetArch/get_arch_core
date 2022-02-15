@@ -58,7 +58,7 @@ const List<String> pre = <String>[];
 const List<String> build = <String>[];
 
 /// Build date in Unix Time (in seconds)
-const int timestamp = 1644380901;
+const int timestamp = 1644825500;
 
 /// Name [name]
 const String name = r'get_arch_core';
@@ -73,7 +73,7 @@ const String repository = r'';
 const String issueTracker = r'';
 
 /// Homepage [homepage]
-const String homepage = r'https://github.com/Hu-Wentao/get_arch_core';
+const String homepage = r'https://github.com/GetArch/get_arch_core';
 
 /// Documentation [documentation]
 const String documentation = r'';

@@ -4,11 +4,13 @@ GetArch core package
 
 ## 快速开始
 
+以 `examples/hello_cli` 为例
+
 ### 0 添加依赖
 
 ```yaml
 dependencies:
-  get_arch_core:
+  get_arch_core:  # 必须> 3.0.0
 
 dev_dependencies:
   build_runner:         # 用于生成代码
@@ -25,29 +27,22 @@ import 'package:get_arch_core/get_arch_core.dart';
 import './injector.config.dart';
 
 ///
-/// Please copy this file to your project and rename it to `injector.dart` ,
-/// and run `dart run build_runner build` to generate `./injector.config.dart`
+/// Please copy this file to your project and rename it to `injector.dart`
+/// run `dart run build_runner build` to generate `./injector.config.dart`
+/// do not edit method name `initPackageDI`
 @InjectableInit()
-Future configPackageDI({
-  required EnvConfig config,
-  EnvironmentFilter? filter,
-}) async =>
-    await $initGetIt(
-      sl,
-      environment: config.envSign.name,
-      environmentFilter: filter,
-    );
+Future initPackageDI(GetIt getIt, IConfig config) async =>
+    await $initGetIt(getIt, environmentFilter: config.filter);
 ```
 
 ### 2 实现 IGetArchPackage (继承 BaseGetArchPackage)
 
-```dart
-class HelloCliPackage extends BaseGetArchPackage {
-  /// 在这里 import `injector.dart` 中的 `configPackageDI`方法
-  @override
-  InitPackageDI? get initPackageDI => configPackageDI;
+导入`injector.dart`文件,然后将`initPackageDI`方法作为参数传入 `onPackageInit`
 
-/// 更多配置请参考 BaseGetArchPackage源代码, 手动实现 IGetArchPackage
+```dart
+/// import your `injector.dart` file, and pass `initPackageDI` to `onPackageInit`
+class HelloCliPackage extends BasePackage {
+  HelloCliPackage() : super.build(onPackageInit: initPackageDI);
 }
 ```
 
@@ -81,22 +76,73 @@ class ServiceBar {
 在运行代码之前, 使用 1 中的 `dart run build_runner build` 命令,再次生成 `./injector.config.dart`
 > 还可以使用 `dart run build_runner watch` 持续生成代码, 无需频繁手动运行 build命令
 
+#### A 嵌入业务逻辑到`onApplicationRun`中
+(无需在run方法前添加 await)
+```dart
+void main(List<String> arguments) {
+  GetArchApplication.run(
+    GetArchCoreConfig.sign(EnvSign.dev),
+    packages: [
+      HelloCliPackage(),
+    ],
+    onBeforeAppRun: () async {
+      // set example
+      if (arguments.isEmpty) {
+        arguments = ["the Answer to Life, the Universe and Everything is"];
+      }
+      print(arguments);
+    },
+    // if you not use `await` on `run` method,
+    // please put your logic code in `onApplicationRun`
+    onApplicationRun: (g, c) async {
+      final bar = g<ServiceFoo>();
+      bar.input(arguments);
+    },
+  );
+}
+```
+
+#### B 在GetArchApplication之外运行业务逻辑
+(务必在run方法前使用 await)
 ```dart
 Future<void> main(List<String> arguments) async {
-  /// 务必添加 `await`
   await GetArchApplication.run(
-    EnvConfig.sign(EnvSign.dev, appName: 'Hello CLI'),
+    GetArchCoreConfig.sign(EnvSign.dev),
     packages: [
       HelloCliPackage(),
     ],
   );
 
-  // 在任意未知使用 `sl<已注入的类>`获取注入类的实例
-  sl<ServiceBar>().calculate(2, 3);
+  /// logic
+  sl<ServiceFoo>().multiplication(2, 3);
 }
 ```
 
-## 版本指南
+## 运行流程
+
+### Package
+
+抽象类 [IPackage]::packageInit 包含 prePkgInit 和 pkgInit 实现混合
+[MxPrePkgMx]::prePkgInit
+[MxSimplePrePkgMx]::prePkgInit
+[MxPkgInit]::pkgInit
+
+基础实现类(可直接继承使用)
+[BasePackage]需要创建对应的[IConfig]配置类
+[BaseSimplePackage] 直接使用[SimplePackageConfig]作为配置类
+
+实现类(供参考)
+[GetArchCorePackage]
+
+### Application
+
+接口类 [IApplication]
+实现混合 [MxAppRun]::run
+
+实现类(供参考)
+[GetArchCoreApplication]
+
+## Git依赖版本指南
 
 以下内容仅针对使用 git依赖的项目
 
@@ -113,3 +159,9 @@ Future<void> main(List<String> arguments) async {
 - 次版本号 在 API出现向不兼容的新功能出现时递增
 
 > - 修订号 在只做了向下兼容的修正时才递增。为了减少其他模块适配工作量, 这里的修正不仅指的针对不正确结果而进行的内部修改, 还包括不影响已有功能的新增修改
+
+## GetArch宇宙
+
+### get_arch_storage_hive_starter
+
+https://github.com/GetArch/get_arch_storage_hive_starter

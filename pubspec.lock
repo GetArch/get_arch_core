@@ -203,7 +203,7 @@ packages:
       name: http_multi_server
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "3.0.1"
+    version: "3.2.0"
   http_parser:
     dependency: transitive
     description:
@@ -215,6 +215,13 @@ packages:
     dependency: "direct main"
     description:
       name: injectable
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "1.5.3"
+  injectable_generator:
+    dependency: "direct dev"
+    description:
+      name: injectable_generator
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "1.5.3"
@@ -337,6 +344,13 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "1.0.1"
+  source_gen:
+    dependency: transitive
+    description:
+      name: source_gen
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "1.2.1"
   source_span:
     dependency: transitive
     description:
