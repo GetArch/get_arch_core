@@ -18,9 +18,14 @@ mixin MxAppRun<C extends IConfig> on MxPrePkgMx<C> implements IApplication<C> {
       appEcho().echoOnBeforeAppInit();
 
       /// App Init ------------------------------------------------------------
-      // 查询是否有手动覆盖注入的配置
-      pkgConfig =
-          (pkgGetIt ?? getIt).isRegistered<C>() ? (pkgGetIt ?? getIt)<C>() : config;
+      pkgGetIt ??= getIt;
+      // 查询是否有手动覆盖注入的配置, 有则覆盖
+      pkgConfig = (pkgGetIt!).isRegistered<C>() ? (pkgGetIt!)<C>() : config;
+
+      // 注册GlobalConfig
+      if (!getIt.isRegistered<GlobalConfig>()) {
+        getIt.registerSingleton<GlobalConfig>(GlobalConfig.of(pkgConfig!));
+      }
 
       /// Init 自身(以及 manualInject)
       await packageInit(getIt, config: pkgConfig);

@@ -31,14 +31,20 @@ mixin IPkgEchoDelegate on IEchoCall {
 /// 如果项目中存在多个[IPackage]
 /// 将只有实现了[IApplication]的[IPackage]所对应的[IGlobalConfig]生效
 mixin IGlobalConfig implements IDto, IEchoCall {
+  // 用于打印package配置时排除重复项
+  static Iterable<String> globalFields = ['sign', 'filter', 'echoCall'];
+
   EnvSign get sign;
 
-  EnvironmentFilter get filter;
-}
+  set sign(EnvSign s);
 
-///
-/// 配置包信息, toJson, 信息打印回调
-mixin IConfig implements IGlobalConfig {
+  EnvironmentFilter get filter;
+
+  set filter(EnvironmentFilter f);
+
+  set echoCall(EchoCall c);
+}
+mixin IPkgConfig implements IDto, IEchoCall {
   String get name;
 
   String get version;
@@ -49,10 +55,11 @@ mixin IConfig implements IGlobalConfig {
 }
 
 ///
+/// 配置包信息, toJson, 信息打印回调
+mixin IConfig implements IPkgConfig, IGlobalConfig {}
 
 ///
 mixin IAppEchoDelegate on IEchoCall {
-// abstract class IAppEchoDelegate implements IPkgEchoDelegate {
   Iterable<String> echoOnBeforeAppInit({Iterable<String>? msg});
 
   Iterable<String> echoOnAfterAppInit({Iterable<String>? msg});

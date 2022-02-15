@@ -13,9 +13,11 @@ mixin MxPkgInit<C extends IConfig> implements IPackage<C> {
       fetchPkgEcho = getIt<IPkgEchoDelegate>;
       fetchPkgEcho!().config = config;
 
-      // BeforeInit
+      // BeforeInit, 打印配置信息
       await onBeforePkgInit?.call(getIt, config);
-      fetchPkgEcho!().echoOnBeforePkgInit();
+      fetchPkgEcho!().echoOnBeforePkgInit(
+        msg: config.toJson().entries.map((e) => '   ${e.key}: ${e.value}'),
+      );
       // Init
       await onPackageInit?.call(getIt, config);
       // AfterInit
@@ -55,9 +57,8 @@ mixin MxPrePkgMx<C extends IConfig> on MxPkgInit<C> implements IPackage<C> {
       throw BaseException(
           "Package[$runtimeType] must add generics[$IConfig], Or extends [$BaseSimplePackage]");
     }
-    // 如果 [config] 为空, 那么[get]中一定在其他包中已经注入过了[config],否则报错
+    // 如果 [config] 为空, 那么[get]中一定在其他包中已经注入过了[config],(一般是Application模式下)
     if (config == null) {
-      // 检查是否添加了配置类, 对[SimplePackageConfig]单独处理
       pkgConfig ??= getIt.isRegistered<C>()
           ? getIt<C>()
           : throw BaseException(
@@ -71,6 +72,11 @@ mixin MxPrePkgMx<C extends IConfig> on MxPkgInit<C> implements IPackage<C> {
           getIt;
       // 查询是否有手动覆盖注入的配置
       pkgConfig ??= pkgGetIt!.isRegistered<C>() ? pkgGetIt!<C>() : config;
+    }
+
+    /// 配置类如果继承自[GlobalConfig]则与[GlobalConfig]同步
+    if (pkgConfig! is GlobalConfig && pkgGetIt!.isRegistered<GlobalConfig>()) {
+      pkgConfig = pkgGetIt!<GlobalConfig>().calibrateGlobal<C>(pkgConfig!);
     }
     return Tuple2(pkgGetIt!, pkgConfig!);
   }
@@ -162,6 +168,11 @@ mixin MxSimplePrePkgMx<C extends SimplePackageConfig> on MxPkgInit<C>
     pkgConfig ??= pkgGetIt.isRegistered<C>(instanceName: configInstanceName)
         ? pkgGetIt<C>(instanceName: configInstanceName)
         : config;
+
+    /// 与[GlobalConfig]同步
+    if (pkgGetIt.isRegistered<GlobalConfig>()) {
+      pkgConfig = pkgGetIt<GlobalConfig>().calibrateGlobal<C>(pkgConfig!);
+    }
     return Tuple2(pkgGetIt, pkgConfig!);
   }
 }
