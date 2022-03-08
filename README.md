@@ -77,7 +77,9 @@ class ServiceBar {
 > 还可以使用 `dart run build_runner watch` 持续生成代码, 无需频繁手动运行 build命令
 
 #### A 嵌入业务逻辑到`onApplicationRun`中
+
 (无需在run方法前添加 await)
+
 ```dart
 void main(List<String> arguments) {
   GetArchApplication.run(
@@ -103,7 +105,9 @@ void main(List<String> arguments) {
 ```
 
 #### B 在GetArchApplication之外运行业务逻辑
+
 (务必在run方法前使用 await)
+
 ```dart
 Future<void> main(List<String> arguments) async {
   await GetArchApplication.run(
@@ -115,6 +119,91 @@ Future<void> main(List<String> arguments) async {
 
   /// logic
   sl<ServiceFoo>().multiplication(2, 3);
+}
+```
+
+## 将Package包装为Application运行
+
+以 `MindBase` App为例
+
+```dart
+import 'package:get_arch_core/get_arch_core.dart';
+
+// 1 创建XxxConfig
+class MindBaseConfig extends BaseConfig {
+  MindBaseConfig({
+    required EnvSign sign,
+    required String name,
+    required String version,
+    required DateTime packAt,
+  }) : super(sign: sign, name: name, version: version, packAt: packAt);
+}
+
+// 2 创建 XxxPackage
+class MindBasePackage extends BasePackage<MindBaseConfig> {
+  MindBasePackage({
+    Future<void> Function(GetIt g, MindBaseConfig c)? onBeforePkgInit,
+    Future<void> Function(GetIt g, MindBaseConfig config)? onAfterPkgInit,
+    Future<void> Function(MindBaseConfig config, Object e, StackTrace s)?
+    onPkgInitError,
+    Future<void> Function(MindBaseConfig config)? onPkgInitFinally,
+    Future<void> Function(GetIt getIt, MindBaseConfig config)? onPackageInit,
+  }) : super(onBeforePkgInit, onAfterPkgInit, onPkgInitError, onPkgInitFinally,
+      onPackageInit);
+}
+
+// 3 创建 XxxApplication
+class MindBaseApplication extends MindBasePackage
+    with MxAppRun<MindBaseConfig> {
+  @override
+  final Future<void> Function()? onAfterAppRun;
+
+  @override
+  final Future<void> Function(Object e, StackTrace s)? onAppError;
+
+  @override
+  final Future<void> Function()? onAppFinally;
+
+  @override
+  final Future<void> Function(GetIt getIt, MindBaseConfig config)?
+  onApplicationRun;
+
+  @override
+  final Future<void> Function(GetIt getIt, MindBaseConfig config)?
+  onBeforeAppInit;
+
+  @override
+  final Future<void> Function()? onBeforeAppRun;
+
+  @override
+  final Iterable<IPackage<IConfig>> packages;
+
+  MindBaseApplication({
+    this.packages = const [],
+    this.onBeforeAppInit,
+    this.onBeforeAppRun,
+    this.onApplicationRun,
+    this.onAfterAppRun,
+    this.onAppError,
+    this.onAppFinally,
+  });
+}
+```
+
+// main.dart file
+```dart
+void main() {
+  MindBaseApplication(
+    onBeforeAppInit: (g, c) async => WidgetsFlutterBinding.ensureInitialized(),
+    onApplicationRun: (g, c) async => runApp(const MyApp()),
+  ).run(
+    GetIt.I,
+    MindBaseConfig(
+        sign: EnvSign.dev,
+        name: "MindBase",
+        version: "0.0.1",
+        packAt: DateTime(2022, 3, 8)),
+  );
 }
 ```
 

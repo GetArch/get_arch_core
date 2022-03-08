@@ -7,14 +7,14 @@ packages:
       name: _fe_analyzer_shared
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "34.0.0"
+    version: "36.0.0"
   analyzer:
     dependency: transitive
     description:
       name: analyzer
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "3.2.0"
+    version: "3.3.1"
   args:
     dependency: transitive
     description:
@@ -99,13 +99,6 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.0.1"
-  cli_util:
-    dependency: transitive
-    description:
-      name: cli_util
-      url: "https://pub.flutter-io.cn"
-    source: hosted
-    version: "0.3.5"
   code_builder:
     dependency: transitive
     description:
@@ -119,7 +112,7 @@ packages:
       name: collection
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "1.15.0"
+    version: "1.16.0"
   convert:
     dependency: transitive
     description:
@@ -140,7 +133,7 @@ packages:
       name: dart_style
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "2.2.1"
+    version: "2.2.2"
   dartz:
     dependency: "direct main"
     description:
@@ -308,7 +301,7 @@ packages:
       name: pub_semver
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "2.1.0"
+    version: "2.1.1"
   pubspec_generator:
     dependency: "direct dev"
     description:

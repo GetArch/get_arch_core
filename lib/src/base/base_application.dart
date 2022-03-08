@@ -1,5 +1,12 @@
 import 'package:get_arch_core/get_arch_core_interface.dart';
 
+///
+/// onBeforeAppInit()
+/// onBeforeAppRun()
+/// onApplicationRun()
+/// onAfterAppRun()
+/// .. onAppError()
+/// onAppFinally()
 mixin MxAppRun<C extends IConfig> on MxPrePkgMx<C> implements IApplication<C> {
   late IAppEchoDelegate Function() appEcho;
 
