@@ -7,4 +7,7 @@ abstract class IDto {
   Map<String, dynamic> toJson();
 
   IDto.fromJson(Map<String, dynamic> json);
+
+  @override
+  String toString() => toJson().toString();
 }
