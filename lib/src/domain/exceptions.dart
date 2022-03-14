@@ -6,7 +6,7 @@ class BaseException implements Exception {
 
   @override
   String toString({int maxInfoLen = 100}) =>
-      'BaseException{msg: $msg, debugInfo: ${(debugInfo.length > maxInfoLen) ? '${debugInfo.substring(0, maxInfoLen)}...' : debugInfo}}';
+      '[$runtimeType]{msg: $msg, debugInfo: ${(debugInfo.length > maxInfoLen) ? '${debugInfo.substring(0, maxInfoLen)}...' : debugInfo}}';
 }
 
 /// 参数错误
