@@ -8,7 +8,7 @@ void main(List<String> arguments) {
     packages: [
       HelloCliPackage(),
     ],
-    onBeforeAppRun: () async {
+    onBeforeAppRun: (g) async {
       // set example
       if (arguments.isEmpty) {
         arguments = ["the Answer to Life, the Universe and Everything is"];

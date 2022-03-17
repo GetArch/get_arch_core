@@ -45,7 +45,7 @@ mixin MxAppRun<C extends IConfig> on MxPrePkgMx<C> implements IApplication<C> {
       appEcho().echoOnAfterAppInit();
 
       /// App run ---------------------------------------------------------
-      await onBeforeAppRun?.call();
+      await onBeforeAppRun?.call(getIt);
 
       await onApplicationRun?.call(getIt, pkgConfig!);
 

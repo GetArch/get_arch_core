@@ -10,7 +10,7 @@ abstract class IApplication<C extends IConfig> implements IPackage<C> {
   // App 的config 不能为空
   Future<void> run(GetIt getIt, C config);
 
-  Future<void> Function()? get onBeforeAppRun;
+  Future<void> Function(GetIt g)? get onBeforeAppRun;
 
   Future<void> Function(GetIt getIt, C config)? get onApplicationRun;
 

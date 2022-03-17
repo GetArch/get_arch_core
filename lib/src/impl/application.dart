@@ -26,11 +26,12 @@ class GetArchCoreApplication extends GetArchCorePackage
   final Future<void> Function()? onAppFinally;
 
   @override
-  final Future<void> Function(GetIt getIt, GetArchCoreConfig config)? onBeforeAppInit;
+  final Future<void> Function(GetIt getIt, GetArchCoreConfig config)?
+      onBeforeAppInit;
 
   @override
   final Iterable<IPackage<IConfig>> packages;
 
   @override
-  final Future<void> Function()? onBeforeAppRun;
+  final Future<void> Function(GetIt g)? onBeforeAppRun;
 }

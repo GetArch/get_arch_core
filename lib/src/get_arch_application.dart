@@ -10,7 +10,7 @@ class GetArchApplication {
       Iterable<IPackage<IConfig>> packages = const [],
       Future<void> Function(GetIt getIt, GetArchCoreConfig config)?
           onBeforeAppInit,
-      Future<void> Function()? onBeforeAppRun,
+      Future<void> Function(GetIt g)? onBeforeAppRun,
       Future<void> Function(GetIt getIt, GetArchCoreConfig config)?
           onApplicationRun,
       Future<void> Function()? onAfterAppRun,
