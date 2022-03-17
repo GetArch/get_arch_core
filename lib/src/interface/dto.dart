@@ -4,9 +4,9 @@
 // Time  : 18:35
 /// Dto类实现该接口
 abstract class IDto {
-  Map<String, dynamic> toJson();
+  const IDto();
 
-  IDto.fromJson(Map<String, dynamic> json);
+  Map<String, dynamic> toJson();
 
   @override
   String toString() => toJson().toString();
