@@ -78,6 +78,14 @@ mixin MxPrePkgMx<C extends IConfig> on MxPkgInit<C> implements IPackage<C> {
     if (pkgConfig! is GlobalConfig && pkgGetIt!.isRegistered<GlobalConfig>()) {
       pkgConfig = pkgGetIt!<GlobalConfig>().calibrateGlobal<C>(pkgConfig!);
     }
+
+    /// 将用户自定义的[BaseConfig]实例注入到容器中
+    if (pkgConfig != null &&
+        !pkgGetIt!.isRegistered<C>() &&
+        pkgConfig.runtimeType != SimplePackageConfig) {
+      pkgGetIt!.registerSingleton<C>(pkgConfig!);
+    }
+
     return Tuple2(pkgGetIt!, pkgConfig!);
   }
 }
