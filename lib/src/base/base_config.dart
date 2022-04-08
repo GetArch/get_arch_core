@@ -29,7 +29,7 @@ class GlobalConfig implements IGlobalConfig {
 
 ///
 /// [PrintEchoCallMx]直接通过 print 输出日志
-class BaseConfig implements IConfig {
+abstract class BaseConfig implements IConfig {
   BaseConfig({
     required EnvSign sign,
     required String name,
