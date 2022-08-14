@@ -16,7 +16,7 @@ mixin MxPkgInit<C extends IConfig> implements IPackage<C> {
       // BeforeInit, 打印配置信息
       await onBeforePkgInit?.call(getIt, config);
       fetchPkgEcho!().echoOnBeforePkgInit(
-        msg: config.toJson().entries.map((e) => '   ${e.key}: ${e.value}'),
+        msg: config.toMap().entries.map((e) => '   ${e.key}: ${e.value}'),
       );
       // Init
       await onPackageInit?.call(getIt, config);

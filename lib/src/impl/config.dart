@@ -25,6 +25,9 @@ class GetArchCoreConfig extends BaseConfig {
           filter: filter,
           manualInject: manualInject,
         );
+  @override
+  @Deprecated('toMap')
+  Map<String, dynamic> toJson() => toMap();
 }
 
 class GetArchCoreEchoDelegate extends PrintPkgEchoDelegate {

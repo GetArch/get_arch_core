@@ -40,5 +40,5 @@ mixin IDo implements IDto {
   // 所有key对应的value都不是null
   // 如果某个value的值为null,则将对应的key移除
   Map<String, dynamic> toThinJson() =>
-      toJson()..removeWhere((key, value) => value == null);
+      toMap()..removeWhere((key, value) => value == null);
 }

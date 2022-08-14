@@ -21,10 +21,13 @@ class GlobalConfig implements IGlobalConfig {
   }
 
   @override
-  Map<String, dynamic> toJson() => <String, dynamic>{
+  Map<String, dynamic> toMap() => <String, dynamic>{
         'sign': sign.name,
         'EnvironmentFilter': "${filter.runtimeType}",
       };
+
+  @override
+  Map<String, dynamic> toJson() => toMap();
 }
 
 ///
@@ -82,7 +85,7 @@ abstract class BaseConfig implements IConfig {
   final DependencyInjectCall? manualInject;
 
   @override
-  Map<String, dynamic> toJson() => <String, dynamic>{
+  Map<String, dynamic> toMap() => <String, dynamic>{
         'sign': sign.name,
         'name': name,
         'version': version,
@@ -113,6 +116,10 @@ class SimplePackageConfig extends BaseConfig {
       required String version,
       required DateTime packAt})
       : super(sign: sign, name: name, version: version, packAt: packAt);
+
+  @override
+  @Deprecated('toMap')
+  Map<String, dynamic> toJson() => toMap();
 }
 
 class PrintPkgEchoDelegate implements IPkgEchoDelegate {

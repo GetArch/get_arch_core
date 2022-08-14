@@ -6,8 +6,11 @@
 abstract class IDto {
   const IDto();
 
-  Map<String, dynamic> toJson();
+  @Deprecated('toMap, Will be removed in GetArchCore v4.0')
+  Map<String, dynamic> toJson() => toMap();
+
+  Map<String, dynamic> toMap();
 
   @override
-  String toString() => toJson().toString();
+  String toString() => toMap().toString();
 }
