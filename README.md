@@ -2,6 +2,28 @@
 
 GetArch core package
 
+## 目录结构指导
+
+### 总体目录结构
+
+- lib
+  - src
+    - core 包（依赖get_arch框架；被app以及其他feat包引用）
+    - 其他feat包 （依赖框架，core包；被app包引用）
+    - app  包（依赖框架，core包，其他feat包；）
+      - package.dart (每个项目只有一个，实现GetArchPackage)
+  - main.dart
+
+### 分包目录结构
+以 core 包为例
+- core (feat名称)
+  - application (应用层)
+  - domain (领域层)
+  - inter  (接口层)
+  - infra  (基础设施层)
+  - config (配置文件，常量等)
+
+
 ## 快速开始
 
 以 `examples/hello_cli` 为例
